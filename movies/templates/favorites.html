@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+Favorite Movies
+{% endblock %}
+
+{% block content %}
+<div class="spacer"></div>
+<h2>Favorites</h2>
+<div id="favorites-list"></div>
+{% block extra_js %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Retrieve favorites from localStorage
+    const movieIds = getFavoriteMovieIds();
+    console.log("Favorite movie IDs:", movieIds);
+
+    // Example: Display favorites in a list
+    fetch("{% url 'movies:favorites' %}", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({imdb_ids: movieIds})
+    })
+    .then(response => response.json())
+    .then(data => {
+        const movies = data.movies || [];
+        if (movies.length === 0) {
+            document.getElementById('favorites-list').innerHTML = '<p>No favorites found.</p>';
+            return;
+        }
+        let html = '<div class="movie-list">';
+        console.log("Movies to display:", movies);
+        movies.forEach(movie => {
+            html += `
+                <div class="movie-item">
+                    <a href="/movie/${movie.imdbID}/">
+                    <div class="movie-poster-container">
+                        <img src="${movie.Poster !== "N/A" ? movie.Poster : "https://via.placeholder.com/150x220.png?text=No+Poster"}" alt="${movie.Title} Poster" />
+                            <a class="fav-icon-container" id="fav-button">
+                            <span
+                                class="material-symbols-outlined"
+                                data-imdbid="${ movie.imdbID }">
+                                star
+                            </span>
+                            </a>
+                    </div>
+                    <h4>${ movie.Title } (${ movie.Year })</h4>
+                    </a>
+                </div>
+            `;
+        });
+        html += '</div>';
+        document.getElementById('favorites-list').innerHTML = html;
+    });
+});
+</script>
+<script src="{% static 'favorite-button.js' %}"></script>
+<scrips src="{% static 'hamburg.js' %}"></script>
+
+{% endblock %}
+{% endblock %}

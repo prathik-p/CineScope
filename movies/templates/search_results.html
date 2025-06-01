@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+Search Results for {{ query }}
+{% endblock %}
+{% block content %}
+<div class="spacer"></div>
+<h2>Search Movies</h2>
+<form class="search-form" method="GET"
+  action="{% url 'movies:search_movies' %}">
+  <input
+    type="text"
+    name="q"
+    placeholder="Search for a movie..."
+    value="{{ query }}" />
+  <button type="submit">Search</button>
+  <select id="year-select">
+
+  </select>
+</form>
+
+{% include "movie_list.html" with movies=movies %}
+
+{% block extra_js %}
+<script src="{% static 'favorite-button.js' %}"></script>
+<scrips src="{% static 'hamburg.js' %}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+  const yearSelect = document.getElementById('year-select');
+  const currentYear = new Date().getFullYear();
+  const allOption = document.createElement('option');
+  allOption.value = '';
+  allOption.textContent = 'All Years';
+  yearSelect.appendChild(allOption);
+
+  for (let year = 1950; year <= currentYear; year++) {
+    const option = document.createElement('option');
+    option.value = year;
+    option.textContent = year;
+    yearSelect.appendChild(option);
+  }
+
+  yearSelect.addEventListener('change', function() {
+    const selectedYear = this.value;
+    document.querySelectorAll('.movie-item').forEach(function(item) {
+      const h4 = item.querySelector('h4');
+      if (!h4) return;
+      const match = h4.textContent.match(/\((\d{4})\)/);
+      const movieYear = match ? match[1] : '';
+      if (!selectedYear || movieYear === selectedYear) {
+        item.style.display = '';
+      } else {
+        item.style.display = 'none';
+      }
+    });
+  });
+
+  // Optionally trigger filter on load
+  // yearSelect.dispatchEvent(new Event('change'));
+});
+    </script>
+{% endblock %}
+{% endblock %}

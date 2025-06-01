@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+{% if movie %}
+{{ movie.Title }}
+{%else %}
+Movie
+{% endif %}
+{% endblock %}
+{% block content %}
+{% if error_message %}
+<p class="error">{{ error_message }}</p>
+<a href="{% url 'movies:home' %}">Go Home</a>
+{% elif movie %}
+<div class="spacer"></div>
+<div class="movie-detail-container">
+
+  <div class="movie-content">
+    {% if movie.Poster != "N/A" %}
+    <div class="poster-container">
+      <button id="favorite-btn" class="favorite-btn"
+        onclick="toggleFavorite('{{ movie.imdbID }}', this)">Add to
+        Favorites</button>
+      <img
+        src="{{ movie.Poster }}"
+        alt="{{ movie.Title }} Poster"
+        class="movie-poster-large" />
+    </div>
+    {% else %}
+    <img
+      src="https://via.placeholder.com/300x440.png?text=No+Poster"
+      alt="No Poster"
+      class="movie-poster-large" />
+    {% endif %}
+    <div class="movie-info">
+      <h2 class="movie-detail-h2">{{ movie.Title }} ({{ movie.Year }})</h2>
+      <p><strong>Rated:</strong> {{ movie.Rated }}</p>
+      <p><strong>Released:</strong> {{ movie.Released }}</p>
+      <p><strong>Runtime:</strong> {{ movie.Runtime }}</p>
+      <p><strong>Genre:</strong> {{ movie.Genre }}</p>
+      <p><strong>Director:</strong> {{ movie.Director }}</p>
+      <p><strong>Writer:</strong> {{ movie.Writer }}</p>
+      <p><strong>Actors:</strong> {{ movie.Actors }}</p>
+      <p><strong>Plot:</strong> {{ movie.Plot }}</p>
+      <p><strong>Country:</strong> {{ movie.Country }}</p>
+      <p><strong>Awards:</strong> {{ movie.Awards }}</p>
+      {% if movie.Ratings %}
+      <p><strong>Ratings:</strong></p>
+      <ul>
+        {% for rating in movie.Ratings %}
+        <li>{{ rating.Source }}: {{ rating.Value }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+      <p><strong>IMDb Rating:</strong> {{ movie.imdbRating }}</p>
+      {% if movie.BoxOffice %}
+      <p><strong>Box Office:</strong> {{ movie.BoxOffice }}</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+<!-- <a href="{% url 'movies:home' %}">Back to Home</a>
+<br />
+<a href="{% url 'movies:search_movies' %}">Search for other movies</a> -->
+{% else %}
+<p>Movie details could not be loaded.</p>
+<a href="{% url 'movies:home' %}">Go Home</a>
+{% endif %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const button = document.getElementById('favorite-btn');
+    updateFavoriteButtonState( '{{ movie.imdbID }}', button);
+  });
+</script>
+<script src="{% static 'favorite-button.js' %}"></script>
+<scrips src="{% static 'hamburg.js' %}"></script>
+
+{% endblock %}
+{% endblock %}

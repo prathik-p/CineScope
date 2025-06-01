@@ -1,0 +1,22 @@
+@media (max-width: 500px) {
+  h2 {
+    color: white;
+    width: 80%;
+    justify-self: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .movie-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+
+  .movie-poster-container {
+    width: 300px;
+  }
+}

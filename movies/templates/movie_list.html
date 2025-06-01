@@ -1,0 +1,29 @@
+{% if movies %}
+<div class="movie-list">
+    {% for movie in movies %}
+    <div class="movie-item">
+        <a href="{% url 'movies:movie_detail' imdb_id=movie.imdbID %}">
+            {% if movie.Poster != "N/A" %}
+            <div class="movie-poster-container">
+                <img src="{{ movie.Poster }}" alt="{{ movie.Title }} Poster" />
+                <a class="fav-icon-container" id="fav-button">
+                    <span
+                        class="material-symbols-outlined"
+                        data-imdbid="{{ movie.imdbID }}">
+                        star
+                    </span>
+                </a>
+            </div>
+            {% else %}
+            <img
+                src="https://via.placeholder.com/150x220.png?text=No+Poster"
+                alt="No Poster Available" />
+            {% endif %}
+            <h4>{{ movie.Title }} ({{ movie.Year }})</h4>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<!-- <p>Could not load trending movies at this time.</p> -->
+{% endif %}

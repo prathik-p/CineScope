@@ -1,0 +1,35 @@
+{% extends "base.html" %} {% load static %}
+{% block title %}
+CineScope
+{%endblock %}
+{% block content %}
+<div class="welcome-section">
+  <div id="background-slideshow" class="background-image">
+    <h1>Welcome to CineScope!</h1>
+    <p>Discover your next favorite film.</p>
+
+    <form
+      method="GET"
+      action="{% url 'movies:search_movies' %}"
+      class="home-search-container">
+      <input type="text" name="q"
+        placeholder="Search for any movie..." />
+      <button type="submit">Search</button>
+    </form>
+  </div>
+</div>
+
+<h2>Trending Movies</h2>
+{% if errors %}
+{% for error in errors %}
+<p class="error">{{ error }}</p>
+{% endfor %}
+{% endif %}
+
+{% include "movie_list.html" with movies=trending_movies %}
+
+{% block extra_js %}
+
+<script src="{% static 'favorite-button.js' %}"></script>
+
+{% endblock %} {% endblock %}
